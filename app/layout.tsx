@@ -6,6 +6,10 @@ import { ClerkProvider, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Logo from "@/components/Logo";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import AppHeader from "@/components/AppHeader";
+import ThemeLoader from "@/components/ThemeLoader";
+import { Toaster } from "sonner";
+import DesignerContextProvider from "@/components/context/DesignerContext";
+import NextTopLoader from "nextjs-toploader";
 
 const sourceSans3 = Source_Sans_3({
   variable: "--font-geist-sans",
@@ -23,9 +27,9 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
-  title: "quickQ: Automatically generate questionnaire using AI",
+  title: "QuickQ: Automatically generate questionnaire using AI",
   description:
-    "quickQ is a tool that helps you create questionnaires quickly and easily using AI.",
+    "QuickQ is a tool that helps you create questionnaires quickly and easily using AI.",
 };
 
 export default function RootLayout({
@@ -39,10 +43,16 @@ export default function RootLayout({
         <body
           className={`${sourceSans3.variable} ${robotoMono.variable} ${newsreader.variable} font-sans antialiased`}
         >
-          <div className="flex flex-col min-h-screen min-w-full max-h-screen">
-            <AppHeader />
-            <main className="flex w-full flex-1">{children}</main>
-          </div>
+          <NextTopLoader />
+          <DesignerContextProvider>
+            <ThemeLoader>
+              <div className="flex flex-col h-screen w-full max-h-screen">
+                <AppHeader />
+                <main className="flex flex-col flex-1">{children}</main>
+                <Toaster />
+              </div>
+            </ThemeLoader>
+          </DesignerContextProvider>
         </body>
       </html>
     </ClerkProvider>

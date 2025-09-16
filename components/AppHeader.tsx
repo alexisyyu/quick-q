@@ -2,11 +2,12 @@
 import React from "react";
 import Logo from "@/components/Logo";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
+import { Button } from "@/components/ui/button";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 export default function AppHeader() {
   return (
-    <nav className="flex justify-between mx-8 my-4">
+    <nav className="flex justify-between lg:mx-8 lg:my-4 mx-2 my-1">
       <Logo />
       <div className="flex items-center space-x-4">
         <ThemeSwitcher />
@@ -14,7 +15,9 @@ export default function AppHeader() {
           <UserButton />
         </SignedIn>
         <SignedOut>
-          <SignInButton />
+          <SignInButton>
+            <Button>Sign In</Button>
+          </SignInButton>
         </SignedOut>
       </div>
     </nav>
