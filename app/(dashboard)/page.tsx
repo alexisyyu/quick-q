@@ -27,8 +27,7 @@ import { redirect } from "next/navigation";
 export default async function Home() {
   const user = await currentUser();
   if (!user) {
-    // redirect to sign in
-    redirect("/sign-in");
+    return null;
   }
   const formsData = await db.select().from(forms);
   console.log(formsData);
