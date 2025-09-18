@@ -1,9 +1,5 @@
-import { GetFormWithResponses } from "@/action/form";
 import React from "react";
-import {
-  ElementsType,
-  FormElementInstance,
-} from "@/components/form-builder/FormElements";
+import { ElementsType } from "@/components/form-builder/FormElements";
 import {
   Table,
   TableRow,
@@ -17,49 +13,17 @@ import type { ReactNode } from "react";
 import { Badge } from "@/components/ui/badge";
 import DownloadDataBtn from "./DownloadDataBtn";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ColumnType, RowType } from "@/app/(dashboard)/response/[id]/page";
 
-export type ColumnType = {
-  id: string;
-  label: string;
-  required: boolean;
-  type: ElementsType;
-};
-export type RowType = {
-  id: string;
-  submittedAt: string;
-  [key: string]: string;
-};
-
-export default async function FormData({ id }: { id: number }) {
-  const { formName, formContent, responses } = await GetFormWithResponses(id);
-  console.log("responses to display", responses);
-  const formElements = JSON.parse(formContent) as FormElementInstance[];
-  const rows: RowType[] = responses.map((res) => {
-    const content = JSON.parse(res.content);
-    return { id: res.id, submittedAt: res.createdAt, ...content };
-  });
-  const columns: ColumnType[] = [];
-
-  formElements.forEach((element) => {
-    switch (element.type) {
-      case "TextField":
-      case "NumberField":
-      case "TextareaField":
-      case "DateField":
-      case "SelectField":
-      case "CheckboxField":
-        columns.push({
-          id: element.id,
-          label: element.extraAttributes?.label,
-          required: element.extraAttributes?.required,
-          type: element.type,
-        });
-        break;
-      default:
-        break;
-    }
-  });
-
+export default async function FormData({
+  formName,
+  rows,
+  columns,
+}: {
+  formName: string;
+  rows: RowType[];
+  columns: ColumnType[];
+}) {
   return (
     <div className="flex flex-col h-full gap-4">
       <DownloadDataBtn formName={formName} rows={rows} columns={columns} />
@@ -111,4 +75,17 @@ function RowCell({ type, value }: { type: ElementsType; value: string }) {
       break;
   }
   return <TableCell>{node}</TableCell>;
+}
+
+export function convertToCSV(rows: RowType[], columns: ColumnType[]) {
+  const header = columns
+    .map((col) => col.label)
+    .concat("Submitted At")
+    .join(",");
+  const csvRows = rows.map((row) => {
+    const values = columns.map((col) => `"${row[col.id] ?? ""}"`);
+    values.push(`"${row.submittedAt}"`);
+    return values.join(",");
+  });
+  return [header, ...csvRows].join("\r\n");
 }

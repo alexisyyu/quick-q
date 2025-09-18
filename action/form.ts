@@ -168,7 +168,7 @@ export async function GetFormWithResponses(id: number) {
     return {
       formName: form.name,
       formContent: form.content,
-      responses: responses,
+      formResponses: responses,
     };
   } catch (error) {
     console.error("Error fetching form with responses:", error);

@@ -1,10 +1,26 @@
 import React from "react";
-import { GetFormById } from "@/action/form";
+import { GetFormById, GetFormWithResponses } from "@/action/form";
 import FormBuilder from "@/components/form-builder/FormBuilder";
 import CopyLink from "@/components/form-response/CopyLink";
 import { Tabs, TabsContent, TabsTrigger, TabsList } from "@/components/ui/tabs";
 import FormData from "@/components/form-response/FormData";
 import FormChart from "@/components/form-response/FormChart";
+import {
+  ElementsType,
+  FormElementInstance,
+} from "@/components/form-builder/FormElements";
+
+export type ColumnType = {
+  id: string;
+  label: string;
+  required: boolean;
+  type: ElementsType;
+};
+export type RowType = {
+  id: string;
+  submittedAt: string;
+  [key: string]: string;
+};
 
 export default async function ResponsePage({
   params,
@@ -25,6 +41,37 @@ export default async function ResponsePage({
     responseRate = Math.round((responses / visits) * 100);
   }
 
+  const { formName, formContent, formResponses } = await GetFormWithResponses(
+    form.id
+  );
+  console.log("responses to display", formResponses);
+  const formElements = JSON.parse(formContent) as FormElementInstance[];
+  const rows: RowType[] = formResponses.map((res) => {
+    const content = JSON.parse(res.content);
+    return { id: res.id, submittedAt: res.createdAt, ...content };
+  });
+  const columns: ColumnType[] = [];
+
+  formElements.forEach((element) => {
+    switch (element.type) {
+      case "TextField":
+      case "NumberField":
+      case "TextareaField":
+      case "DateField":
+      case "SelectField":
+      case "CheckboxField":
+        columns.push({
+          id: element.id,
+          label: element.extraAttributes?.label,
+          required: element.extraAttributes?.required,
+          type: element.type,
+        });
+        break;
+      default:
+        break;
+    }
+  });
+
   return (
     <div className="flex flex-col h-full w-full px-8 border-b border-muted gap-6">
       <h1 className="text-4xl font-bold truncate">{form.name}</h1>
@@ -34,28 +81,25 @@ export default async function ResponsePage({
         <p>Responses: {responses}</p>
         <p>Response Rate: {responseRate}%</p>
       </div>
-      <ResponsesTable id={form.id} />
+      <Tabs
+        defaultValue="data"
+        className="w-full justify-center lg:items-center gap-4 flex-1"
+      >
+        <TabsList className="flex justify-center">
+          <TabsTrigger className="lg:w-sm w-1/2" value="data">
+            Raw Data
+          </TabsTrigger>
+          <TabsTrigger className="lg:w-sm w-1/2" value="chart">
+            Insights
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="data" className="w-full">
+          <FormData formName={formName} rows={rows} columns={columns} />
+        </TabsContent>
+        <TabsContent value="chart" className="w-full flex justify-center">
+          <FormChart formName={formName} rows={rows} columns={columns} />
+        </TabsContent>
+      </Tabs>
     </div>
-  );
-}
-
-function ResponsesTable({ id }: { id: number }) {
-  return (
-    <Tabs defaultValue="data" className="w-full lg:items-center gap-4">
-      <TabsList className="flex justify-center">
-        <TabsTrigger className="lg:w-sm w-1/2" value="data">
-          Raw Data
-        </TabsTrigger>
-        <TabsTrigger className="lg:w-sm w-1/2" value="chart">
-          Insights
-        </TabsTrigger>
-      </TabsList>
-      <TabsContent value="data" className="w-full">
-        <FormData id={id} />
-      </TabsContent>
-      <TabsContent value="chart" className="w-full">
-        <FormChart id={id} />
-      </TabsContent>
-    </Tabs>
   );
 }

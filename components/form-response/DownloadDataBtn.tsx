@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
-import { RowType, ColumnType } from "./FormData";
+import { RowType, ColumnType } from "@/app/(dashboard)/response/[id]/page";
 import { Button } from "@/components/ui/button";
+import { convertToCSV } from "./FormData";
 
 export default function DownloadDataBtn({
   formName,
@@ -17,16 +18,7 @@ export default function DownloadDataBtn({
     columns: ColumnType[],
     filename = `${formName}_data.csv`
   ) {
-    const header = columns
-      .map((col) => col.label)
-      .concat("Submitted At")
-      .join(",");
-    const csvRows = rows.map((row) => {
-      const values = columns.map((col) => `"${row[col.id] ?? ""}"`);
-      values.push(`"${row.submittedAt}"`);
-      return values.join(",");
-    });
-    const csvContent = [header, ...csvRows].join("\r\n");
+    const csvContent = convertToCSV(rows, columns);
     const blob = new Blob([csvContent], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");

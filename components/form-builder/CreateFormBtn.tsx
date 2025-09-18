@@ -28,6 +28,11 @@ import { formSchema, formSchemaType } from "@/schemas/form";
 import { CreateForm } from "@/action/form";
 import { FileUser } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { generateQuestionnaire } from "@/action/ai";
+import useDesigner from "@/components/hooks/useDesigner";
+import { FormElement, FormElementInstance } from "./FormElements";
+import { useState } from "react";
+import { set } from "date-fns";
 
 export default function CreateFormBtn() {
   const router = useRouter();
@@ -38,8 +43,11 @@ export default function CreateFormBtn() {
       description: "",
     },
   });
+  const { setElements } = useDesigner();
+  const [generating, setGenerating] = useState(false);
 
   async function onSubmit(data: formSchemaType) {
+    console.log("onSubmit called:", data);
     try {
       const formId = await CreateForm(data);
       toast("Form submitted successfully: form " + formId);
@@ -51,18 +59,21 @@ export default function CreateFormBtn() {
   function SubmitButton({
     variant,
     content,
+    handleClick,
   }: {
     variant?: React.ComponentProps<typeof Button>["variant"];
     content?: string;
+    handleClick?: () => void;
   }) {
     const loading = form.formState.isSubmitting;
     return (
       <Button
-        onClick={form.handleSubmit(onSubmit)}
+        // onClick={form.handleSubmit(onSubmit)}
+        onClick={handleClick ? handleClick : form.handleSubmit(onSubmit)}
         disabled={loading}
         variant={variant}
       >
-        {loading ? "Generating..." : content}
+        {loading || generating ? "Creating..." : content}
       </Button>
     );
   }
@@ -124,7 +135,36 @@ export default function CreateFormBtn() {
           <DialogClose asChild>
             <Button variant="ghost">Cancel</Button>
           </DialogClose>
-          <SubmitButton content="AI Generate" />
+          <SubmitButton
+            content="AI Generate"
+            handleClick={async () => {
+              setGenerating(true);
+              const name = form.getValues("name");
+              const description = form.getValues("description");
+              if (!name) return;
+              const response = await generateQuestionnaire(
+                `Questionnaire Name: ${name}\nDescription: ${description}`
+              );
+              // console.log("AI Response:", response);
+              const elements = JSON.parse(
+                response || "[]"
+              ) as FormElementInstance[];
+              elements.forEach((element, index) => {
+                element.id = `${(new Date().getTime() + index)
+                  .toString()
+                  .slice(-12)}`;
+              });
+              console.log("AI Generated elements:", elements);
+              setElements(elements);
+              // console.log("elements with id:", elements);
+              setGenerating(false);
+              onSubmit({
+                name: name,
+                description: description,
+                content: JSON.stringify(elements),
+              });
+            }}
+          />
           <SubmitButton variant="secondary" content="Create Manually" />
         </DialogFooter>
       </DialogContent>

@@ -22,7 +22,7 @@ import { MoveLeft, MoveRight } from "lucide-react";
 import Link from "next/link";
 
 export default function FormBuilder({ form }: { form: Form }) {
-  const { setElements, setSelectedElement } = useDesigner();
+  const { elements, setElements, setSelectedElement } = useDesigner();
   const [isReady, setIsReady] = useState(false);
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
