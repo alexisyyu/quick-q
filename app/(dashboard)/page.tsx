@@ -23,11 +23,12 @@ import Link from "next/link";
 import { Archive, ArrowRight, Eye, SquarePen } from "lucide-react";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import Welcome from "@/components/welcome/Welcome";
 
 export default async function Home() {
   const user = await currentUser();
   if (!user) {
-    return null;
+    return <Welcome />;
   }
   const formsData = await db.select().from(forms);
   console.log(formsData);
