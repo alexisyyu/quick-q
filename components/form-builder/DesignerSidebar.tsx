@@ -4,11 +4,12 @@ import { FormElements } from "./FormElements";
 import useDesigner from "@/components/hooks/useDesigner";
 import PropertiesSidebar from "./PropertiesSidebar";
 import { Separator } from "@/components/ui/separator";
+import { useState, useEffect } from "react";
 
 export default function DesignerSidebar() {
   const { selectedElement } = useDesigner();
   return (
-    <aside className="min-w-[100px] max-w-[400px] flex-1 flex flex-col flex-grow gap-2 border-l-2 border-muted p-4 bg-background overflow-y-auto h-full rounded-xl">
+    <aside className="w-[180px] md:w-[300px] flex flex-col gap-2 border-l-2 border-muted p-4 bg-background overflow-y-auto h-full rounded-xl">
       {selectedElement ? (
         <PropertiesSidebar />
       ) : (

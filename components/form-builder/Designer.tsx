@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import DesignerSidebar from "./DesignerSidebar";
 import {
   DragEndEvent,
@@ -18,7 +18,6 @@ import {
 import useDesigner from "../hooks/useDesigner";
 import { Button } from "../ui/button";
 import { Trash2 } from "lucide-react";
-import { is } from "drizzle-orm";
 
 export default function Designer() {
   const {
@@ -193,7 +192,7 @@ export default function Designer() {
     <div className="flex flex-1 gap-2">
       {/* designer canvas */}
       <div
-        className="flex-1 h-full"
+        className="flex-1 h-full overflow-y-auto"
         onClick={() => {
           if (selectedElement) {
             setSelectedElement(null);

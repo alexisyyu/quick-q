@@ -32,7 +32,7 @@ export default function Welcome() {
     },
     {
       title: "View Responses",
-      description: "View and manage responses in real-time with our dashboard.",
+      description: "View and export responses in real-time with our dashboard.",
       image: "",
     },
     {
@@ -54,7 +54,7 @@ export default function Welcome() {
         questionnaires.
       </h2>
       <Button
-        className="mb-8 mt-2 text-xl p-4"
+        className="mb-8 mt-2 text-xl p-4 font-semibold"
         onClick={() => router.push("/sign-in")}
       >
         Try QuickQ
@@ -64,7 +64,7 @@ export default function Welcome() {
         {steps.map((step, index) => (
           <div
             key={index}
-            className="flex flex-col items-center text-start p-1"
+            className="flex flex-col items-center text-start p-2"
           >
             {index !== 0 && <Separator className="my-2" />}
             <h3 className="font-bold text-lg w-full">{step.title}</h3>

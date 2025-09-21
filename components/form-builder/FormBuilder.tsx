@@ -38,15 +38,13 @@ export default function FormBuilder({ form }: { form: Form }) {
   const sensors = useSensors(mouseSensor, touchSensor);
 
   useEffect(() => {
-    if (isReady) return;
     const elements = JSON.parse(form.content);
-    console.log("Loaded elements:", elements);
+    // console.log("Loaded elements:", elements);
     setElements(elements);
     setSelectedElement(null);
-    setIsReady(true);
-  }, [form, setElements, setSelectedElement, isReady]);
+  }, [form, isReady, setElements, setSelectedElement]);
 
-  if (!isReady) return null;
+  if (!elements) return null;
 
   const shareUrl = `${window.location.origin}/submit/${form.shareURL}`;
 
@@ -116,7 +114,8 @@ export default function FormBuilder({ form }: { form: Form }) {
           </div>
         </nav>
 
-        <div className="flex-1 flex w-full relative overflow-y-auto bg-secondary p-2">
+        {/* <div className="flex-1 flex w-full relative overflow-y-auto bg-secondary p-2"> */}
+        <div className="flex-1 max-h-screen flex w-full bg-secondary p-2">
           <Designer />
         </div>
       </main>

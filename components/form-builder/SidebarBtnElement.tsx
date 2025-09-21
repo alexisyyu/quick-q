@@ -29,8 +29,8 @@ export default function SidebarBtnElement({
       {...draggable.listeners}
       {...draggable.attributes}
     >
-      <Icon className="text-primary cursor-grab size-20" />
-      <p className="text-xs">{label}</p>
+      <Icon className="text-primary cursor-grab size-12" />
+      <p className="text-md font-semibold">{label}</p>
     </Button>
   );
 }
