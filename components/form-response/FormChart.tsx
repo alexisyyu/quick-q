@@ -41,7 +41,7 @@ export default function FormChart({
   }, [formName, rows, columns]);
 
   return (
-    <Card className="w-full max-w-sm justify-between max-h-2/3 lg:my-8">
+    <Card className="w-full max-w-sm justify-between lg:max-h-2/3 lg:my-8">
       <CardHeader>
         <CardTitle>
           Insights {insights.length > 0 && `${index + 1} / ${insights.length}`}
