@@ -1,9 +1,11 @@
 # QuickQ
 
-QuickQ is a tool designed to help you easily create, distribute, and analyze questionnaires.
+QuickQ is a platform that makes it easy to create, distribute, and analyze questionnaires.
 
 ## Features
 
-- Questionnaire creation with the help of AI
-- Simple distribution and collection of responses (login-free!)
-- Powerful analytics and reporting
+- AI-assisted questionnaire creation
+- Intuitive drag-and-drop form builder
+- Questionnaire preview
+- Effortless sharing and response collection (no login required)
+- Export data and get AI-powered insights

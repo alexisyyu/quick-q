@@ -53,7 +53,7 @@ export default function FormSubmitComponent({
       const JsonContent = JSON.stringify(formValues.current);
       const response = await SubmitForm(formUrl, JsonContent);
       console.log("submitted response", response);
-      // window.localStorage.setItem(`submitted_${formUrl}`, "true");
+      window.localStorage.setItem(`submitted_${formUrl}`, "true");
       setSubmitted(true);
     } catch {
       toast.error("There was an error submitting the form");
