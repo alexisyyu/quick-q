@@ -214,7 +214,7 @@ function PropertiesComponent({ elementInstance }: PropertiesComponentType) {
                 />
               </FormControl>
               <FormDescription>
-                This is the label for the text field
+                This is the label for the select field
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -237,7 +237,7 @@ function PropertiesComponent({ elementInstance }: PropertiesComponentType) {
                 />
               </FormControl>
               <FormDescription>
-                This is the helper text for the text field
+                This is the helper text for the select field
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -285,6 +285,7 @@ function PropertiesComponent({ elementInstance }: PropertiesComponentType) {
                           (_, i) => i !== index
                         );
                         form.setValue("options", newOptions);
+                        form.handleSubmit(applyChanges)();
                       }}
                     >
                       <MinusIcon />
@@ -293,7 +294,7 @@ function PropertiesComponent({ elementInstance }: PropertiesComponentType) {
                 ))}
               </div>
               <FormDescription>
-                This is the helper text for the text field
+                This is the helper text for the select field
               </FormDescription>
               <FormMessage />
             </FormItem>
